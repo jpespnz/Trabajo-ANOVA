@@ -1,0 +1,6 @@
+"0","ggplot(df, aes(x = factor(Days), y = Reaction)) +"
+"0","  geom_boxplot(fill = ""lightblue"") +"
+"0","  labs(title = ""Distribución del tiempo de reacción por día"","
+"0","       x = ""Día"", y = ""Tiempo de reacción (ms)"") +"
+"0","  theme_minimal()"
+"0",""

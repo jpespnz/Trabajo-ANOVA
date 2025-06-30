@@ -1,0 +1,143 @@
+---
+title: "Trabajo Final ANOVA"
+format:
+  html:
+    warning: false
+  pdf:
+    warning: false
+editor: visual
+---
+
+```{r dependencias, echo=FALSE}
+if (!require("readxl")) install.packages("readxl"); library("readxl")
+if (!require("writexl")) install.packages("writexl"); library("writexl")
+if (!require("tidyverse")) install.packages("tidyverse"); library("tidyverse")
+if (!require("car")) install.packages("car"); library("car")
+if (!require("psych")) install.packages("psych"); library("psych")
+if (!require("afex")) install.packages("afex"); library("afex")
+if (!require("emmeans")) install.packages("emmeans"); library("emmeans")
+if (!require("easystats")) install.packages("easystats"); library("easystats")
+if (!require("psychTools")) install.packages("psychTools"); library("psychTools")
+if (!require('report')) install.packages('report'); library('report')
+if (!require('papaja')) install.packages("papaja"); library('papaja')
+if (!require('knitr')) install.packages('knitr'); library('knitr')
+if (!require('ggforce')) install.packages('ggforce'); library('ggforce')
+if (!require('Hmisc')) install.packages('Hmisc'); library('Hmisc')
+if (!require('gtsummary')) install.packages('gtsummary'); library('gtsummary')
+library(emmeans)
+```
+
+# Introducción
+
+El conjunto de datos sleepstudy registra el tiempo de reacción de 18 participantes evaluados durante 10 días consecutivos de privación de sueño. Contiene las variables Reaction (milisegundos), Days (0 a 9) y Subject (identificador). Corresponde a un diseño de medidas repetidas que permite analizar los efectos acumulativos de la privación sobre el rendimiento.
+
+```{r}
+data("sleepstudy")  
+sleepstudy
+df <- sleepstudy
+```
+
+## Exploratory Data analysis
+
+```{r}
+glimpse(df)
+summary(df)
+
+df$Days <- as.factor(df$Days)
+```
+
+```{r}
+describeBy(sleepstudy, group = sleepstudy$Days)
+```
+
+```{r Grafico 1, results="hide", echo=FALSE}
+
+ggplot(df, aes(x = Days, y = Reaction)) +
+  stat_summary(fun = mean, geom = "line", color = "steelblue", size = 1.2) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.3) +
+  labs(title = "Promedio de tiempo de reacción por día",
+       x = "Días de privación de sueño", y = "Tiempo de reacción (ms)") +
+  theme_minimal()
+```
+
+```{r Grafico 2, results="hide", echo=FALSE}
+ggplot(df, aes(x = factor(Days), y = Reaction)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Distribución del tiempo de reacción por día",
+       x = "Día", y = "Tiempo de reacción (ms)") +
+  theme_minimal()
+
+```
+
+```{r Grafico 3, results="hide", echo=FALSE}
+ggplot(sleepstudy, aes(x = Days, y = Reaction, group = Subject)) +
+  geom_line(alpha = 0.3) +
+  labs(title = "Tiempo de reacción por sujeto",
+       x = "Días", y = "Tiempo de reacción") +
+  theme_minimal()
+
+```
+
+------------------------------------------------------------------------
+
+# Objetivo
+
+Evaluar el efecto de la privación de sueño progresiva sobre el rendimiento cognitivo, medido a través del tiempo de reacción, en participantes sometidos a restricción del sueño durante un período de 10 días consecutivos.
+
+## Hipotesis
+
+El tiempo de reacción de los participantes aumenta progresivamente a medida que se acumulan los días de privación de sueño, reflejando un deterioro en el rendimiento cognitivo.
+
+------------------------------------------------------------------------
+
+# Supuestos y modelo
+
+```{r}
+model <- aov_ez(id = "Subject",
+                    dv = "Reaction",
+                    within = "Days",
+                    data = sleepstudy)
+
+
+
+
+
+```
+
+```{r}
+qqnorm(residuals(model))
+qqline(residuals(model), col = "red")
+
+```
+
+```{r}
+check_model(model)
+```
+
+```{r}
+shapiro_test <- shapiro.test(residuals(model))
+print(shapiro_test)
+```
+
+La prueba de Shapiro-Wilk fue significativa (W = 0.98, p = 0.035), lo que indica una **desviación de la normalidad** en los residuos
+
+```{r}
+summary(model)
+eta_squared(model, partial = TRUE)
+emmeans(model, pairwise ~ Days, adjust = "fdr")
+```
+
+Se realizó un ANOVA de medidas repetidas para evaluar el efecto de la privación de sueño (Days) sobre el tiempo de reacción. El análisis reveló un efecto significativo del factor Days, F(9, 153) = 18.70, p \< .001, lo que indica que el rendimiento cognitivo varió significativamente a lo largo del tiempo. La prueba de esfericidad de Mauchly fue significativa (p \< .001), evidenciando una violación de este supuesto; en consecuencia, se aplicaron las correcciones de Greenhouse–Geisser y Huynh–Feldt, que confirmaron la significancia del efecto (p \< .001). El tamaño del efecto fue grande, η² parcial = 0.52, IC 95% \[0.42, 1.00\], lo que sugiere que más de la mitad de la varianza en el rendimiento se explica por el efecto de los días de privación.\
+
+Las comparaciones post hoc, corregidas por FDR, indicaron que los tiempos de reacción aumentan significativamente a partir del día 3 en adelante (p \< .05), con diferencias particularmente marcadas entre los días iniciales (X0–X2) y los días finales (X7–X9). Estos resultados respaldan la hipótesis de un deterioro progresivo del rendimiento cognitivo con el aumento de los días de privación de sueño.
+
+```{r}
+sleepstudy$Days <- as.numeric(sleepstudy$Days)
+
+reg_model <- lmer(Reaction ~ Days + (1 | Subject), data = sleepstudy)
+summary(reg_model)
+standardize_parameters(reg_model)
+r2(reg_model)
+```
+
+Se ajustó un modelo lineal mixto para predecir el tiempo de reacción a partir del número de días de privación de sueño, incluyendo un intercepto aleatorio por sujeto. Los resultados mostraron que el tiempo de reacción aumentó significativamente con el paso de los días, β = 10.47, SE = 0.80, t(161) = 13.02, p \< .001, lo que indica un deterioro progresivo del rendimiento cognitivo asociado a la restricción del sueño. El coeficiente estandarizado fue β = 0.54, IC 95% \[0.45, 0.62\], lo que representa un efecto moderado-alto. El modelo explicó el 28% de la varianza mediante efectos fijos (R² marginal = 0.28) y el 70% al considerar también los efectos aleatorios (R² condicional = 0.70).

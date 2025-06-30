@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Trabajo Final ANOVA</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Presentación_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Presentación_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Presentación_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Presentación_files/libs/quarto-html/popper.min.js"></script>
+<script src="Presentación_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Presentación_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Presentación_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Presentación_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Presentación_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Presentación_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Presentación_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Presentación.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Trabajo Final ANOVA</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introducción" class="level1">
+<h1>Introducción</h1>
+<p>El conjunto de datos sleepstudy registra el tiempo de reacción de 18 participantes evaluados durante 10 días consecutivos de privación de sueño. Contiene las variables Reaction (milisegundos), Days (0 a 9) y Subject (identificador). Corresponde a un diseño de medidas repetidas que permite analizar los efectos acumulativos de la privación sobre el rendimiento.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"sleepstudy"</span>)  </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sleepstudy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Reaction Days Subject
+1   249.5600    0     308
+2   258.7047    1     308
+3   250.8006    2     308
+4   321.4398    3     308
+5   356.8519    4     308
+6   414.6901    5     308
+7   382.2038    6     308
+8   290.1486    7     308
+9   430.5853    8     308
+10  466.3535    9     308
+11  222.7339    0     309
+12  205.2658    1     309
+13  202.9778    2     309
+14  204.7070    3     309
+15  207.7161    4     309
+16  215.9618    5     309
+17  213.6303    6     309
+18  217.7272    7     309
+19  224.2957    8     309
+20  237.3142    9     309
+21  199.0539    0     310
+22  194.3322    1     310
+23  234.3200    2     310
+24  232.8416    3     310
+25  229.3074    4     310
+26  220.4579    5     310
+27  235.4208    6     310
+28  255.7511    7     310
+29  261.0125    8     310
+30  247.5153    9     310
+31  321.5426    0     330
+32  300.4002    1     330
+33  283.8565    2     330
+34  285.1330    3     330
+35  285.7973    4     330
+36  297.5855    5     330
+37  280.2396    6     330
+38  318.2613    7     330
+39  305.3495    8     330
+40  354.0487    9     330
+41  287.6079    0     331
+42  285.0000    1     331
+43  301.8206    2     331
+44  320.1153    3     331
+45  316.2773    4     331
+46  293.3187    5     331
+47  290.0750    6     331
+48  334.8177    7     331
+49  293.7469    8     331
+50  371.5811    9     331
+51  234.8606    0     332
+52  242.8118    1     332
+53  272.9613    2     332
+54  309.7688    3     332
+55  317.4629    4     332
+56  309.9976    5     332
+57  454.1619    6     332
+58  346.8311    7     332
+59  330.3003    8     332
+60  253.8644    9     332
+61  283.8424    0     333
+62  289.5550    1     333
+63  276.7693    2     333
+64  299.8097    3     333
+65  297.1710    4     333
+66  338.1665    5     333
+67  332.0265    6     333
+68  348.8399    7     333
+69  333.3600    8     333
+70  362.0428    9     333
+71  265.4731    0     334
+72  276.2012    1     334
+73  243.3647    2     334
+74  254.6723    3     334
+75  279.0244    4     334
+76  284.1912    5     334
+77  305.5248    6     334
+78  331.5229    7     334
+79  335.7469    8     334
+80  377.2990    9     334
+81  241.6083    0     335
+82  273.9472    1     335
+83  254.4907    2     335
+84  270.8021    3     335
+85  251.4519    4     335
+86  254.6362    5     335
+87  245.4523    6     335
+88  235.3110    7     335
+89  235.7541    8     335
+90  237.2466    9     335
+91  312.3666    0     337
+92  313.8058    1     337
+93  291.6112    2     337
+94  346.1222    3     337
+95  365.7324    4     337
+96  391.8385    5     337
+97  404.2601    6     337
+98  416.6923    7     337
+99  455.8643    8     337
+100 458.9167    9     337
+101 236.1032    0     349
+102 230.3167    1     349
+103 238.9256    2     349
+104 254.9220    3     349
+105 250.7103    4     349
+106 269.7744    5     349
+107 281.5648    6     349
+108 308.1020    7     349
+109 336.2806    8     349
+110 351.6451    9     349
+111 256.2968    0     350
+112 243.4543    1     350
+113 256.2046    2     350
+114 255.5271    3     350
+115 268.9165    4     350
+116 329.7247    5     350
+117 379.4445    6     350
+118 362.9184    7     350
+119 394.4872    8     350
+120 389.0527    9     350
+121 250.5265    0     351
+122 300.0576    1     351
+123 269.8939    2     351
+124 280.5891    3     351
+125 271.8274    4     351
+126 304.6336    5     351
+127 287.7466    6     351
+128 266.5955    7     351
+129 321.5418    8     351
+130 347.5655    9     351
+131 221.6771    0     352
+132 298.1939    1     352
+133 326.8785    2     352
+134 346.8555    3     352
+135 348.7402    4     352
+136 352.8287    5     352
+137 354.4266    6     352
+138 360.4326    7     352
+139 375.6406    8     352
+140 388.5417    9     352
+141 271.9235    0     369
+142 268.4369    1     369
+143 257.2424    2     369
+144 277.6566    3     369
+145 314.8222    4     369
+146 317.2135    5     369
+147 298.1353    6     369
+148 348.1229    7     369
+149 340.2800    8     369
+150 366.5131    9     369
+151 225.2640    0     370
+152 234.5235    1     370
+153 238.9008    2     370
+154 240.4730    3     370
+155 267.5373    4     370
+156 344.1937    5     370
+157 281.1481    6     370
+158 347.5855    7     370
+159 365.1630    8     370
+160 372.2288    9     370
+161 269.8804    0     371
+162 272.4428    1     371
+163 277.8989    2     371
+164 281.7895    3     371
+165 279.1705    4     371
+166 284.5120    5     371
+167 259.2658    6     371
+168 304.6306    7     371
+169 350.7807    8     371
+170 369.4692    9     371
+171 269.4117    0     372
+172 273.4740    1     372
+173 297.5968    2     372
+174 310.6316    3     372
+175 287.1726    4     372
+176 329.6076    5     372
+177 334.4818    6     372
+178 343.2199    7     372
+179 369.1417    8     372
+180 364.1236    9     372</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> sleepstudy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data analysis</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 180
+Columns: 3
+$ Reaction &lt;dbl&gt; 249.5600, 258.7047, 250.8006, 321.4398, 356.8519, 414.6901, 3…
+$ Days     &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0…
+$ Subject  &lt;fct&gt; 308, 308, 308, 308, 308, 308, 308, 308, 308, 308, 309, 309, 3…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Reaction          Days        Subject   
+ Min.   :194.3   Min.   :0.0   308    : 10  
+ 1st Qu.:255.4   1st Qu.:2.0   309    : 10  
+ Median :288.7   Median :4.5   310    : 10  
+ Mean   :298.5   Mean   :4.5   330    : 10  
+ 3rd Qu.:336.8   3rd Qu.:7.0   331    : 10  
+ Max.   :466.4   Max.   :9.0   332    : 10  
+                               (Other):120  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Days <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>Days)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describeBy</span>(sleepstudy, <span class="at">group =</span> sleepstudy<span class="sc">$</span>Days)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+group: 0
+         vars  n   mean    sd median trimmed   mad    min    max  range skew
+Reaction    1 18 256.65 32.13 253.41   256.2 27.47 199.05 321.54 122.49  0.3
+Days        2 18   0.00  0.00   0.00     0.0  0.00   0.00   0.00   0.00  NaN
+Subject     3 18   9.50  5.34   9.50     9.5  6.67   1.00  18.00  17.00  0.0
+         kurtosis   se
+Reaction     -0.7 7.57
+Days          NaN 0.00
+Subject      -1.4 1.26
+------------------------------------------------------------ 
+group: 1
+         vars  n  mean    sd median trimmed   mad    min    max  range  skew
+Reaction    1 18 264.5 33.43 272.96   265.8 38.80 194.33 313.81 119.47 -0.54
+Days        2 18   1.0  0.00   1.00     1.0  0.00   1.00   1.00   0.00   NaN
+Subject     3 18   9.5  5.34   9.50     9.5  6.67   1.00  18.00  17.00  0.00
+         kurtosis   se
+Reaction    -0.77 7.88
+Days          NaN 0.00
+Subject     -1.40 1.26
+------------------------------------------------------------ 
+group: 2
+         vars  n   mean    sd median trimmed   mad    min    max range skew
+Reaction    1 18 265.36 29.47 263.57  265.42 30.02 202.98 326.88 123.9 0.04
+Days        2 18   2.00  0.00   2.00    2.00  0.00   2.00   2.00   0.0  NaN
+Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.0 0.00
+         kurtosis   se
+Reaction    -0.41 6.95
+Days          NaN 0.00
+Subject     -1.40 1.26
+------------------------------------------------------------ 
+group: 3
+         vars  n   mean    sd median trimmed   mad    min    max  range  skew
+Reaction    1 18 282.99 38.86 281.19  283.89 40.84 204.71 346.86 142.15 -0.08
+Days        2 18   3.00  0.00   3.00    3.00  0.00   3.00   3.00   0.00   NaN
+Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00  0.00
+         kurtosis   se
+Reaction    -0.89 9.16
+Days          NaN 0.00
+Subject     -1.40 1.26
+------------------------------------------------------------ 
+group: 4
+         vars  n   mean    sd median trimmed   mad    min    max  range skew
+Reaction    1 18 288.65 42.54 282.48  288.89 46.56 207.72 365.73 158.02 0.13
+Days        2 18   4.00  0.00   4.00    4.00  0.00   4.00   4.00   0.00  NaN
+Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00 0.00
+         kurtosis    se
+Reaction    -0.77 10.03
+Days          NaN  0.00
+Subject     -1.40  1.26
+------------------------------------------------------------ 
+group: 5
+         vars  n   mean    sd median trimmed   mad    min    max  range skew
+Reaction    1 18 308.52 51.77 307.32  307.67 40.01 215.96 414.69 198.73 0.09
+Days        2 18   5.00  0.00   5.00    5.00  0.00   5.00   5.00   0.00  NaN
+Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00 0.00
+         kurtosis    se
+Reaction    -0.47 12.20
+Days          NaN  0.00
+Subject     -1.40  1.26
+------------------------------------------------------------ 
+group: 6
+         vars  n   mean    sd median trimmed   mad    min    max  range skew
+Reaction    1 18 312.18 63.17 294.11  309.46 58.04 213.63 454.16 240.53 0.53
+Days        2 18   6.00  0.00   6.00    6.00  0.00   6.00   6.00   0.00  NaN
+Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00 0.00
+         kurtosis    se
+Reaction    -0.61 14.89
+Days          NaN  0.00
+Subject     -1.40  1.26
+------------------------------------------------------------ 
+group: 7
+         vars  n   mean    sd median trimmed   mad    min    max  range  skew
+Reaction    1 18 318.75 50.10 333.17  318.94 38.79 217.73 416.69 198.97 -0.36
+Days        2 18   7.00  0.00   7.00    7.00  0.00   7.00   7.00   0.00   NaN
+Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00  0.00
+         kurtosis    se
+Reaction    -0.54 11.81
+Days          NaN  0.00
+Subject     -1.40  1.26
+------------------------------------------------------------ 
+group: 8
+         vars  n   mean    sd median trimmed   mad   min    max  range  skew
+Reaction    1 18 336.63 60.20 336.01   336.2 47.29 224.3 455.86 231.57 -0.04
+Days        2 18   8.00  0.00   8.00     8.0  0.00   8.0   8.00   0.00   NaN
+Subject     3 18   9.50  5.34   9.50     9.5  6.67   1.0  18.00  17.00  0.00
+         kurtosis    se
+Reaction    -0.48 14.19
+Days          NaN  0.00
+Subject     -1.40  1.26
+------------------------------------------------------------ 
+group: 9
+         vars  n   mean    sd median trimmed   mad    min    max  range  skew
+Reaction    1 18 350.85 66.99 365.32  350.73 23.30 237.25 466.35 229.11 -0.37
+Days        2 18   9.00  0.00   9.00    9.00  0.00   9.00   9.00   0.00   NaN
+Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00  0.00
+         kurtosis    se
+Reaction    -0.64 15.79
+Days          NaN  0.00
+Subject     -1.40  1.26</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Presentación_files/figure-html/Grafico%201-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Presentación_files/figure-html/Grafico%202-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Presentación_files/figure-html/Grafico%203-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="objetivo" class="level1">
+<h1>Objetivo</h1>
+<p>Evaluar el efecto de la privación de sueño progresiva sobre el rendimiento cognitivo, medido a través del tiempo de reacción, en participantes sometidos a restricción del sueño durante un período de 10 días consecutivos.</p>
+<section id="hipotesis" class="level2">
+<h2 class="anchored" data-anchor-id="hipotesis">Hipotesis</h2>
+<p>El tiempo de reacción de los participantes aumenta progresivamente a medida que se acumulan los días de privación de sueño, reflejando un deterioro en el rendimiento cognitivo.</p>
+<hr>
+</section>
+</section>
+<section id="supuestos-y-modelo" class="level1">
+<h1>Supuestos y modelo</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">aov_ez</span>(<span class="at">id =</span> <span class="st">"Subject"</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">dv =</span> <span class="st">"Reaction"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">within =</span> <span class="st">"Days"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> sleepstudy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(model), <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Presentación_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Presentación_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>shapiro_test <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(model))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(shapiro_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals(model)
+W = 0.98378, p-value = 0.03495</code></pre>
+</div>
+</div>
+<p>La prueba de Shapiro-Wilk fue significativa (W = 0.98, p = 0.035), lo que indica una <strong>desviación de la normalidad</strong> en los residuos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Univariate Type III Repeated-Measures ANOVA Assuming Sphericity
+
+              Sum Sq num Df Error SS den Df  F value    Pr(&gt;F)    
+(Intercept) 16039253      1   250618     17 1087.979 &lt; 2.2e-16 ***
+Days          166235      9   151101    153   18.703 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Mauchly Tests for Sphericity
+
+     Test statistic    p-value
+Days     0.00021902 5.1549e-08
+
+
+Greenhouse-Geisser and Huynh-Feldt Corrections
+ for Departure from Sphericity
+
+      GG eps Pr(&gt;F[GG])    
+Days 0.36903  5.463e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+        HF eps   Pr(&gt;F[HF])
+Days 0.4693648 7.076552e-11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(model, <span class="at">partial =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Effect Size for ANOVA (Type III)
+
+Parameter | Eta2 (partial) |       95% CI
+-----------------------------------------
+Days      |           0.52 | [0.42, 1.00]
+
+- One-sided CIs: upper bound fixed at [1.00].</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(model, pairwise <span class="sc">~</span> Days, <span class="at">adjust =</span> <span class="st">"fdr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+ Days emmean    SE df lower.CL upper.CL
+ X0      257  7.57 17      241      273
+ X1      264  7.88 17      248      281
+ X2      265  6.95 17      251      280
+ X3      283  9.16 17      264      302
+ X4      289 10.00 17      267      310
+ X5      309 12.20 17      283      334
+ X6      312 14.90 17      281      344
+ X7      319 11.80 17      294      344
+ X8      337 14.20 17      307      367
+ X9      351 15.80 17      318      384
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast estimate    SE df t.ratio p.value
+ X0 - X1    -7.844  5.61 17  -1.397  0.2058
+ X0 - X2    -8.710  7.50 17  -1.162  0.2867
+ X0 - X3   -26.340  8.77 17  -3.003  0.0120
+ X0 - X4   -31.998  9.47 17  -3.378  0.0067
+ X0 - X5   -51.867 11.70 17  -4.423  0.0010
+ X0 - X6   -55.526 15.10 17  -3.669  0.0041
+ X0 - X7   -62.099 10.40 17  -5.957  0.0002
+ X0 - X8   -79.978 13.70 17  -5.834  0.0002
+ X0 - X9   -94.199 13.50 17  -6.958  0.0001
+ X1 - X2    -0.866  5.10 17  -0.170  0.8671
+ X1 - X3   -18.496  6.24 17  -2.964  0.0126
+ X1 - X4   -24.154  7.73 17  -3.125  0.0099
+ X1 - X5   -44.023 10.50 17  -4.212  0.0016
+ X1 - X6   -47.682 14.50 17  -3.291  0.0078
+ X1 - X7   -54.255 10.60 17  -5.106  0.0004
+ X1 - X8   -72.134 13.20 17  -5.452  0.0002
+ X1 - X9   -86.355 13.20 17  -6.520  0.0001
+ X2 - X3   -17.630  4.56 17  -3.867  0.0029
+ X2 - X4   -23.288  7.22 17  -3.226  0.0086
+ X2 - X5   -43.157 10.70 17  -4.047  0.0021
+ X2 - X6   -46.816 13.30 17  -3.529  0.0053
+ X2 - X7   -53.389  9.53 17  -5.601  0.0002
+ X2 - X8   -71.268 13.00 17  -5.474  0.0002
+ X2 - X9   -85.489 14.30 17  -5.975  0.0002
+ X3 - X4    -5.657  4.07 17  -1.388  0.2058
+ X3 - X5   -25.526  8.45 17  -3.021  0.0119
+ X3 - X6   -29.186 11.00 17  -2.647  0.0231
+ X3 - X7   -35.759  9.68 17  -3.695  0.0040
+ X3 - X8   -53.637 11.40 17  -4.698  0.0007
+ X3 - X9   -67.859 13.00 17  -5.211  0.0003
+ X4 - X5   -19.869  6.36 17  -3.125  0.0099
+ X4 - X6   -23.529  9.93 17  -2.371  0.0384
+ X4 - X7   -30.101  8.69 17  -3.466  0.0058
+ X4 - X8   -47.980  9.49 17  -5.057  0.0004
+ X4 - X9   -62.202 11.10 17  -5.603  0.0002
+ X5 - X6    -3.660 10.00 17  -0.365  0.7360
+ X5 - X7   -10.232  9.46 17  -1.082  0.3153
+ X5 - X8   -28.111  6.18 17  -4.546  0.0009
+ X5 - X9   -42.333  8.68 17  -4.875  0.0005
+ X6 - X7    -6.572 10.70 17  -0.616  0.5714
+ X6 - X8   -24.451 10.70 17  -2.279  0.0448
+ X6 - X9   -38.673 16.00 17  -2.423  0.0355
+ X7 - X8   -17.879  9.25 17  -1.933  0.0852
+ X7 - X9   -32.101 12.00 17  -2.683  0.0221
+ X8 - X9   -14.222  7.46 17  -1.906  0.0874
+
+P value adjustment: fdr method for 45 tests </code></pre>
+</div>
+</div>
+<p>Se realizó un ANOVA de medidas repetidas para evaluar el efecto de la privación de sueño (Days) sobre el tiempo de reacción. El análisis reveló un efecto significativo del factor Days, F(9, 153) = 18.70, p &lt; .001, lo que indica que el rendimiento cognitivo varió significativamente a lo largo del tiempo. La prueba de esfericidad de Mauchly fue significativa (p &lt; .001), evidenciando una violación de este supuesto; en consecuencia, se aplicaron las correcciones de Greenhouse–Geisser y Huynh–Feldt, que confirmaron la significancia del efecto (p &lt; .001). El tamaño del efecto fue grande, η² parcial = 0.52, IC 95% [0.42, 1.00], lo que sugiere que más de la mitad de la varianza en el rendimiento se explica por el efecto de los días de privación.<br>
+</p>
+<p>Las comparaciones post hoc, corregidas por FDR, indicaron que los tiempos de reacción aumentan significativamente a partir del día 3 en adelante (p &lt; .05), con diferencias particularmente marcadas entre los días iniciales (X0–X2) y los días finales (X7–X9). Estos resultados respaldan la hipótesis de un deterioro progresivo del rendimiento cognitivo con el aumento de los días de privación de sueño.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>Days <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(sleepstudy<span class="sc">$</span>Days)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>reg_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> sleepstudy)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: Reaction ~ Days + (1 | Subject)
+   Data: sleepstudy
+
+REML criterion at convergence: 1786.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.2257 -0.5529  0.0109  0.5188  4.2506 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Subject  (Intercept) 1378.2   37.12   
+ Residual              960.5   30.99   
+Number of obs: 180, groups:  Subject, 18
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept) 251.4051     9.7467  22.8102   25.79   &lt;2e-16 ***
+Days         10.4673     0.8042 161.0000   13.02   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+     (Intr)
+Days -0.371</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardize_parameters</span>(reg_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Standardization method: refit
+
+Parameter   | Std. Coef. |        95% CI
+----------------------------------------
+(Intercept) |  -6.92e-16 | [-0.32, 0.32]
+Days        |       0.54 | [ 0.45, 0.62]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(reg_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># R2 for Mixed Models
+
+  Conditional R2: 0.704
+     Marginal R2: 0.280</code></pre>
+</div>
+</div>
+<p>Se ajustó un modelo lineal mixto para predecir el tiempo de reacción a partir del número de días de privación de sueño, incluyendo un intercepto aleatorio por sujeto. Los resultados mostraron que el tiempo de reacción aumentó significativamente con el paso de los días, β = 10.47, SE = 0.80, t(161) = 13.02, p &lt; .001, lo que indica un deterioro progresivo del rendimiento cognitivo asociado a la restricción del sueño. El coeficiente estandarizado fue β = 0.54, IC 95% [0.45, 0.62], lo que representa un efecto moderado-alto. El modelo explicó el 28% de la varianza mediante efectos fijos (R² marginal = 0.28) y el 70% al considerar también los efectos aleatorios (R² condicional = 0.70).</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

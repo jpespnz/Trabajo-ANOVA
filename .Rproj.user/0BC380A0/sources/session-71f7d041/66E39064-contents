@@ -1,0 +1,22 @@
+if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
+if (!require('DT')) install.packages('DT'); library('DT')
+if (!require('ggraph')) install.packages('ggraph'); library('ggraph')
+if (!require('here')) install.packages('here'); library('here')
+if (!require('papaja')) install.packages("papaja"); library('papaja')
+if (!require('parameters')) install.packages('parameters'); library('parameters')
+if (!require('remotes')) install.packages('remotes'); library('remotes')
+if (!require('renv')) install.packages("renv"); library('renv')
+if (!require('report')) install.packages("report"); library('report')
+if (!require('rticles')) install.packages('rticles'); library('rticles')
+if (!require('see')) install.packages("see"); library('see')
+if (!require('sjPlot')) install.packages('sjPlot'); library('sjPlot')
+if (!require('stringi')) install.packages('stringi'); library('stringi')
+if (!require('tinytex')) install.packages('tinytex'); library('tinytex')
+
+
+gitcreds::gitcreds_set()
+S 
+
+usethis::create_github_token()
+
+

@@ -1,0 +1,153 @@
+---
+title: "Presentación_Final"
+format: html
+editor: visual
+---
+
+```{r Dependencias}
+if (!require("readxl")) install.packages("readxl"); library("readxl")
+if (!require("writexl")) install.packages("writexl"); library("writexl")
+if (!require("tidyverse")) install.packages("tidyverse"); library("tidyverse")
+if (!require("car")) install.packages("car"); library("car")
+if (!require("psych")) install.packages("psych"); library("psych")
+
+if (!require("afex")) install.packages("afex"); library("afex")
+if (!require("emmeans")) install.packages("emmeans"); library("emmeans")
+if (!require("easystats")) install.packages("easystats"); library("easystats")
+if (!require("psychTools")) install.packages("psychTools"); library("psychTools")
+if (!require('report')) install.packages('report'); library('report')
+if (!require('papaja')) install.packages("papaja"); library('papaja')
+if (!require('knitr')) install.packages('knitr'); library('knitr')
+if (!require('ggforce')) install.packages('ggforce'); library('ggforce')
+if (!require('Hmisc')) install.packages('Hmisc'); library('Hmisc')
+if (!require('gtsummary')) install.packages('gtsummary'); library('gtsummary')
+
+
+
+
+```
+
+# Introducción
+
+---
+
+\*\*Dataframe\*\*:
+
+---
+
+```{r}
+data("sleepstudy")  
+sleepstudy
+df <- sleepstudy
+
+
+```
+
+## Exploratory Data analysis
+
+```{r}
+glimpse(df)
+summary(df)
+
+df$Days <- as.factor(df$Days)
+```
+
+```{r}
+describeBy(sleepstudy, group = sleepstudy$Days)
+```
+
+```{r Grafico 1}
+
+ggplot(df, aes(x = Days, y = Reaction)) +
+  stat_summary(fun = mean, geom = "line", color = "steelblue", size = 1.2) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.3) +
+  labs(title = "Promedio de tiempo de reacción por día",
+       x = "Días de privación de sueño", y = "Tiempo de reacción (ms)") +
+  theme_minimal()
+```
+
+```{r grafico 2}
+ggplot(df, aes(x = factor(Days), y = Reaction)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Distribución del tiempo de reacción por día",
+       x = "Día", y = "Tiempo de reacción (ms)") +
+  theme_minimal()
+
+```
+
+```{r grafico 3}
+ggplot(sleepstudy, aes(x = Days, y = Reaction, group = Subject)) +
+  geom_line(alpha = 0.3) +
+  labs(title = "Tiempo de reacción por sujeto",
+       x = "Días", y = "Tiempo de reacción") +
+  theme_minimal()
+
+```
+
+---
+
+# Objetivos
+
+## General
+
+> Evaluar el efecto de la privación de sueño progresiva sobre el rendimiento cognitivo, medido a través del tiempo de reacción, en participantes sometidos a restricción del sueño durante un período de 10 días consecutivos.
+
+## Hipotesis
+
+> 
+>
+> > El tiempo de reacción de los participantes aumenta progresivamente a medida que se acumulan los días de privación de sueño, reflejando un deterioro en el rendimiento cognitivo.
+
+---
+
+# Supuestos y modelo
+
+```{r}
+model <- aov_ez(id = "Subject",
+                    dv = "Reaction",
+                    within = "Days",
+                    data = sleepstudy)
+
+
+
+
+
+```
+
+```{r}
+qqnorm(residuals(model))
+qqline(residuals(model), col = "red")
+
+```
+
+```{r}
+check_model(model)
+```
+
+```{r}
+shapiro_test <- shapiro.test(residuals(model))
+print(shapiro_test)
+```
+
+La prueba de Shapiro-Wilk fue significativa (W = 0.98, p = 0.035), lo que indica una **desviación de la normalidad** en los residuos
+
+```{r}
+summary(model)
+
+```
+
+Se realizó un ANOVA de medidas repetidas para evaluar el efecto de la privación de sueño (factor **Days**) sobre el tiempo de reacción. El análisis mostró un efecto significativo de los días, **F(9, 153) = 18.70, p \< .001**, lo que indica que el rendimiento cognitivo cambió significativamente a lo largo del tiempo.\
+
+La prueba de esfericidad de Mauchly resultó significativa (**p \< .001**), lo que sugiere que se violó el supuesto de esfericidad. Por ello, se aplicaron correcciones de Greenhouse–Geisser y Huynh–Feldt, ambas confirmando la significancia del efecto (**p \< .001**).\
+
+En conjunto, estos resultados indican que **la privación progresiva de sueño afecta significativamente el tiempo de reacción**, respaldando la hipótesis planteada.
+
+```{r}
+sleepstudy$Days <- as.numeric(sleepstudy$Days)
+
+reg_model <- lmer(Reaction ~ Days + (1 | Subject), data = sleepstudy)
+summary(reg_model)
+
+```
+
+> Se ajustó un modelo lineal mixto pra predecir el tiempo de reacción a partir del número de días de privación de sueño, incluyendo un intercepto aleatorio por sujeto. Los resultados mostraron que el tiempo de reacción aumenta significativamente con el paso de los días (**β = 10.47, SE = 0.80, t(161) = 13.02, p \< .001**), lo que indica un deterioro progresivo del rendimiento cognitivo asociado a la restricción del sueño.

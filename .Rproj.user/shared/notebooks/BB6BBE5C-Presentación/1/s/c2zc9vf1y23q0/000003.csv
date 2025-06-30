@@ -1,0 +1,6 @@
+"0","ggplot(sleepstudy, aes(x = Days, y = Reaction, group = Subject)) +"
+"0","  geom_line(alpha = 0.3) +"
+"0","  labs(title = ""Tiempo de reacción por sujeto"","
+"0","       x = ""Días"", y = ""Tiempo de reacción"") +"
+"0","  theme_minimal()"
+"0",""
