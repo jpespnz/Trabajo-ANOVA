@@ -101,323 +101,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introducción" class="level1">
 <h1>Introducción</h1>
-<p>El conjunto de datos sleepstudy registra el tiempo de reacción de 18 participantes evaluados durante 10 días consecutivos de privación de sueño. Contiene las variables Reaction (milisegundos), Days (0 a 9) y Subject (identificador). Corresponde a un diseño de medidas repetidas que permite analizar los efectos acumulativos de la privación sobre el rendimiento.</p>
+<p>El conjunto de datos utilizado contiene información sobre el desempeño en memoria de trabajo de participantes categorizados según su nivel de privación de sueño: sin privación, privación moderada y privación severa. Esta clasificación permite evaluar diferencias interindividuales en función del grado de restricción del sueño. La variable dependiente corresponde a un puntaje de memoria de trabajo obtenido tras un periodo de exposición controlada.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"sleepstudy"</span>)  </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sleepstudy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    Reaction Days Subject
-1   249.5600    0     308
-2   258.7047    1     308
-3   250.8006    2     308
-4   321.4398    3     308
-5   356.8519    4     308
-6   414.6901    5     308
-7   382.2038    6     308
-8   290.1486    7     308
-9   430.5853    8     308
-10  466.3535    9     308
-11  222.7339    0     309
-12  205.2658    1     309
-13  202.9778    2     309
-14  204.7070    3     309
-15  207.7161    4     309
-16  215.9618    5     309
-17  213.6303    6     309
-18  217.7272    7     309
-19  224.2957    8     309
-20  237.3142    9     309
-21  199.0539    0     310
-22  194.3322    1     310
-23  234.3200    2     310
-24  232.8416    3     310
-25  229.3074    4     310
-26  220.4579    5     310
-27  235.4208    6     310
-28  255.7511    7     310
-29  261.0125    8     310
-30  247.5153    9     310
-31  321.5426    0     330
-32  300.4002    1     330
-33  283.8565    2     330
-34  285.1330    3     330
-35  285.7973    4     330
-36  297.5855    5     330
-37  280.2396    6     330
-38  318.2613    7     330
-39  305.3495    8     330
-40  354.0487    9     330
-41  287.6079    0     331
-42  285.0000    1     331
-43  301.8206    2     331
-44  320.1153    3     331
-45  316.2773    4     331
-46  293.3187    5     331
-47  290.0750    6     331
-48  334.8177    7     331
-49  293.7469    8     331
-50  371.5811    9     331
-51  234.8606    0     332
-52  242.8118    1     332
-53  272.9613    2     332
-54  309.7688    3     332
-55  317.4629    4     332
-56  309.9976    5     332
-57  454.1619    6     332
-58  346.8311    7     332
-59  330.3003    8     332
-60  253.8644    9     332
-61  283.8424    0     333
-62  289.5550    1     333
-63  276.7693    2     333
-64  299.8097    3     333
-65  297.1710    4     333
-66  338.1665    5     333
-67  332.0265    6     333
-68  348.8399    7     333
-69  333.3600    8     333
-70  362.0428    9     333
-71  265.4731    0     334
-72  276.2012    1     334
-73  243.3647    2     334
-74  254.6723    3     334
-75  279.0244    4     334
-76  284.1912    5     334
-77  305.5248    6     334
-78  331.5229    7     334
-79  335.7469    8     334
-80  377.2990    9     334
-81  241.6083    0     335
-82  273.9472    1     335
-83  254.4907    2     335
-84  270.8021    3     335
-85  251.4519    4     335
-86  254.6362    5     335
-87  245.4523    6     335
-88  235.3110    7     335
-89  235.7541    8     335
-90  237.2466    9     335
-91  312.3666    0     337
-92  313.8058    1     337
-93  291.6112    2     337
-94  346.1222    3     337
-95  365.7324    4     337
-96  391.8385    5     337
-97  404.2601    6     337
-98  416.6923    7     337
-99  455.8643    8     337
-100 458.9167    9     337
-101 236.1032    0     349
-102 230.3167    1     349
-103 238.9256    2     349
-104 254.9220    3     349
-105 250.7103    4     349
-106 269.7744    5     349
-107 281.5648    6     349
-108 308.1020    7     349
-109 336.2806    8     349
-110 351.6451    9     349
-111 256.2968    0     350
-112 243.4543    1     350
-113 256.2046    2     350
-114 255.5271    3     350
-115 268.9165    4     350
-116 329.7247    5     350
-117 379.4445    6     350
-118 362.9184    7     350
-119 394.4872    8     350
-120 389.0527    9     350
-121 250.5265    0     351
-122 300.0576    1     351
-123 269.8939    2     351
-124 280.5891    3     351
-125 271.8274    4     351
-126 304.6336    5     351
-127 287.7466    6     351
-128 266.5955    7     351
-129 321.5418    8     351
-130 347.5655    9     351
-131 221.6771    0     352
-132 298.1939    1     352
-133 326.8785    2     352
-134 346.8555    3     352
-135 348.7402    4     352
-136 352.8287    5     352
-137 354.4266    6     352
-138 360.4326    7     352
-139 375.6406    8     352
-140 388.5417    9     352
-141 271.9235    0     369
-142 268.4369    1     369
-143 257.2424    2     369
-144 277.6566    3     369
-145 314.8222    4     369
-146 317.2135    5     369
-147 298.1353    6     369
-148 348.1229    7     369
-149 340.2800    8     369
-150 366.5131    9     369
-151 225.2640    0     370
-152 234.5235    1     370
-153 238.9008    2     370
-154 240.4730    3     370
-155 267.5373    4     370
-156 344.1937    5     370
-157 281.1481    6     370
-158 347.5855    7     370
-159 365.1630    8     370
-160 372.2288    9     370
-161 269.8804    0     371
-162 272.4428    1     371
-163 277.8989    2     371
-164 281.7895    3     371
-165 279.1705    4     371
-166 284.5120    5     371
-167 259.2658    6     371
-168 304.6306    7     371
-169 350.7807    8     371
-170 369.4692    9     371
-171 269.4117    0     372
-172 273.4740    1     372
-173 297.5968    2     372
-174 310.6316    3     372
-175 287.1726    4     372
-176 329.6076    5     372
-177 334.4818    6     372
-178 343.2199    7     372
-179 369.1417    8     372
-180 364.1236    9     372</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> sleepstudy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"/Users/JP/Desktop/Trabajo-ANOVA/sleep_memory_data.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># No_Sleep_Deprivation: Personas que duermen 7 horas o más</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Moderate_Sleep_Deprivation: Personas que duermen entre 4-6 horas </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Severe_Sleep_Deprivation: Personas que duermen entre 1-3 horas </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="exploratory-data-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data analysis</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 180
+<pre><code>Rows: 60
 Columns: 3
-$ Reaction &lt;dbl&gt; 249.5600, 258.7047, 250.8006, 321.4398, 356.8519, 414.6901, 3…
-$ Days     &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0…
-$ Subject  &lt;fct&gt; 308, 308, 308, 308, 308, 308, 308, 308, 308, 308, 309, 309, 3…</code></pre>
+$ ID  &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,…
+$ SDL &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, …
+$ WMS &lt;dbl&gt; 93.5, 85.7, 89.5, 90.5, 89.6, 87.6, 94.0, 87.6, 96.1, 87.7, 93.2, …</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Reaction          Days        Subject   
- Min.   :194.3   Min.   :0.0   308    : 10  
- 1st Qu.:255.4   1st Qu.:2.0   309    : 10  
- Median :288.7   Median :4.5   310    : 10  
- Mean   :298.5   Mean   :4.5   330    : 10  
- 3rd Qu.:336.8   3rd Qu.:7.0   331    : 10  
- Max.   :466.4   Max.   :9.0   332    : 10  
-                               (Other):120  </code></pre>
+<pre><code>       ID             SDL            WMS       
+ Min.   : 1.00   Min.   :0.00   Min.   :48.00  
+ 1st Qu.:15.75   1st Qu.:0.75   1st Qu.:60.70  
+ Median :30.50   Median :1.50   Median :64.95  
+ Mean   :30.50   Mean   :1.25   Mean   :70.55  
+ 3rd Qu.:45.25   3rd Qu.:2.00   3rd Qu.:82.92  
+ Max.   :60.00   Max.   :2.00   Max.   :97.10  </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Days <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>Days)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>SDL <span class="ot">&lt;-</span> <span class="fu">as.character</span>(df<span class="sc">$</span>SDL)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>SDL <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="at">x =</span> df<span class="sc">$</span>SDL, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>,<span class="st">"1"</span>,<span class="st">"2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describeBy</span>(sleepstudy, <span class="at">group =</span> sleepstudy<span class="sc">$</span>Days)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">describeBy</span>(df<span class="sc">$</span>SDL)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Descriptive statistics by group 
 group: 0
-         vars  n   mean    sd median trimmed   mad    min    max  range skew
-Reaction    1 18 256.65 32.13 253.41   256.2 27.47 199.05 321.54 122.49  0.3
-Days        2 18   0.00  0.00   0.00     0.0  0.00   0.00   0.00   0.00  NaN
-Subject     3 18   9.50  5.34   9.50     9.5  6.67   1.00  18.00  17.00  0.0
-         kurtosis   se
-Reaction     -0.7 7.57
-Days          NaN 0.00
-Subject      -1.4 1.26
+    vars  n  mean  sd median trimmed  mad  min  max range skew kurtosis   se
+SDL    1 15  1.00 0.0    1.0    1.00 0.00  1.0  1.0   0.0  NaN      NaN 0.00
+WMS    2 15 89.93 4.1   89.5   89.95 3.85 82.4 97.1  14.7 0.17    -1.03 1.06
 ------------------------------------------------------------ 
 group: 1
-         vars  n  mean    sd median trimmed   mad    min    max  range  skew
-Reaction    1 18 264.5 33.43 272.96   265.8 38.80 194.33 313.81 119.47 -0.54
-Days        2 18   1.0  0.00   1.00     1.0  0.00   1.00   1.00   0.00   NaN
-Subject     3 18   9.5  5.34   9.50     9.5  6.67   1.00  18.00  17.00  0.00
-         kurtosis   se
-Reaction    -0.77 7.88
-Days          NaN 0.00
-Subject     -1.40 1.26
+    vars  n  mean   sd median trimmed  mad  min  max range  skew kurtosis   se
+SDL    1 15  2.00 0.00    2.0    2.00 0.00  2.0  2.0   0.0   NaN      NaN 0.00
+WMS    2 15 73.27 6.79   73.6   73.29 6.82 61.7 84.5  22.8 -0.16    -1.11 1.75
 ------------------------------------------------------------ 
 group: 2
-         vars  n   mean    sd median trimmed   mad    min    max range skew
-Reaction    1 18 265.36 29.47 263.57  265.42 30.02 202.98 326.88 123.9 0.04
-Days        2 18   2.00  0.00   2.00    2.00  0.00   2.00   2.00   0.0  NaN
-Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.0 0.00
-         kurtosis   se
-Reaction    -0.41 6.95
-Days          NaN 0.00
-Subject     -1.40 1.26
------------------------------------------------------------- 
-group: 3
-         vars  n   mean    sd median trimmed   mad    min    max  range  skew
-Reaction    1 18 282.99 38.86 281.19  283.89 40.84 204.71 346.86 142.15 -0.08
-Days        2 18   3.00  0.00   3.00    3.00  0.00   3.00   3.00   0.00   NaN
-Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00  0.00
-         kurtosis   se
-Reaction    -0.89 9.16
-Days          NaN 0.00
-Subject     -1.40 1.26
------------------------------------------------------------- 
-group: 4
-         vars  n   mean    sd median trimmed   mad    min    max  range skew
-Reaction    1 18 288.65 42.54 282.48  288.89 46.56 207.72 365.73 158.02 0.13
-Days        2 18   4.00  0.00   4.00    4.00  0.00   4.00   4.00   0.00  NaN
-Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00 0.00
-         kurtosis    se
-Reaction    -0.77 10.03
-Days          NaN  0.00
-Subject     -1.40  1.26
------------------------------------------------------------- 
-group: 5
-         vars  n   mean    sd median trimmed   mad    min    max  range skew
-Reaction    1 18 308.52 51.77 307.32  307.67 40.01 215.96 414.69 198.73 0.09
-Days        2 18   5.00  0.00   5.00    5.00  0.00   5.00   5.00   0.00  NaN
-Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00 0.00
-         kurtosis    se
-Reaction    -0.47 12.20
-Days          NaN  0.00
-Subject     -1.40  1.26
------------------------------------------------------------- 
-group: 6
-         vars  n   mean    sd median trimmed   mad    min    max  range skew
-Reaction    1 18 312.18 63.17 294.11  309.46 58.04 213.63 454.16 240.53 0.53
-Days        2 18   6.00  0.00   6.00    6.00  0.00   6.00   6.00   0.00  NaN
-Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00 0.00
-         kurtosis    se
-Reaction    -0.61 14.89
-Days          NaN  0.00
-Subject     -1.40  1.26
------------------------------------------------------------- 
-group: 7
-         vars  n   mean    sd median trimmed   mad    min    max  range  skew
-Reaction    1 18 318.75 50.10 333.17  318.94 38.79 217.73 416.69 198.97 -0.36
-Days        2 18   7.00  0.00   7.00    7.00  0.00   7.00   7.00   0.00   NaN
-Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00  0.00
-         kurtosis    se
-Reaction    -0.54 11.81
-Days          NaN  0.00
-Subject     -1.40  1.26
------------------------------------------------------------- 
-group: 8
-         vars  n   mean    sd median trimmed   mad   min    max  range  skew
-Reaction    1 18 336.63 60.20 336.01   336.2 47.29 224.3 455.86 231.57 -0.04
-Days        2 18   8.00  0.00   8.00     8.0  0.00   8.0   8.00   0.00   NaN
-Subject     3 18   9.50  5.34   9.50     9.5  6.67   1.0  18.00  17.00  0.00
-         kurtosis    se
-Reaction    -0.48 14.19
-Days          NaN  0.00
-Subject     -1.40  1.26
------------------------------------------------------------- 
-group: 9
-         vars  n   mean    sd median trimmed   mad    min    max  range  skew
-Reaction    1 18 350.85 66.99 365.32  350.73 23.30 237.25 466.35 229.11 -0.37
-Days        2 18   9.00  0.00   9.00    9.00  0.00   9.00   9.00   0.00   NaN
-Subject     3 18   9.50  5.34   9.50    9.50  6.67   1.00  18.00  17.00  0.00
-         kurtosis    se
-Reaction    -0.64 15.79
-Days          NaN  0.00
-Subject     -1.40  1.26</code></pre>
+    vars  n  mean  sd median trimmed  mad min  max range  skew kurtosis   se
+SDL    1 30  3.00 0.0    3.0     3.0 0.00   3  3.0   0.0   NaN      NaN 0.00
+WMS    2 30 59.51 4.2   60.6    59.9 3.34  48 66.3  18.3 -0.86     0.44 0.77</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -438,38 +175,24 @@ Subject     -1.40  1.26</code></pre>
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Presentación_files/figure-html/Grafico%203-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<hr>
 </section>
 </section>
 <section id="objetivo" class="level1">
 <h1>Objetivo</h1>
-<p>Evaluar el efecto de la privación de sueño progresiva sobre el rendimiento cognitivo, medido a través del tiempo de reacción, en participantes sometidos a restricción del sueño durante un período de 10 días consecutivos.</p>
+<p>Evaluar el efecto de la privación progresiva del sueño sobre la memoria de trabajo, medida a través de un puntaje específico</p>
 <section id="hipotesis" class="level2">
 <h2 class="anchored" data-anchor-id="hipotesis">Hipotesis</h2>
-<p>El tiempo de reacción de los participantes aumenta progresivamente a medida que se acumulan los días de privación de sueño, reflejando un deterioro en el rendimiento cognitivo.</p>
-<hr>
+<p>Los participantes con privación del sueño, ya sea leve o moderada, presentarán un menor rendimiento cognitivo en comparación con aquellos sin privación del sueño.</p>
 </section>
 </section>
 <section id="supuestos-y-modelo" class="level1">
 <h1>Supuestos y modelo</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">aov_ez</span>(<span class="at">id =</span> <span class="st">"Subject"</span>,</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">dv =</span> <span class="st">"Reaction"</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">within =</span> <span class="st">"Days"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> sleepstudy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">aov</span>(WMS <span class="sc">~</span> SDL, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model))</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(model), <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">qqline</span>(<span class="fu">residuals</span>(model), <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -479,7 +202,7 @@ Subject     -1.40  1.26</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -489,180 +212,38 @@ Subject     -1.40  1.26</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>shapiro_test <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(model))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(shapiro_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>shapiro_test <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(model))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(shapiro_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
 
 data:  residuals(model)
-W = 0.98378, p-value = 0.03495</code></pre>
+W = 0.97742, p-value = 0.3294</code></pre>
 </div>
 </div>
-<p>La prueba de Shapiro-Wilk fue significativa (W = 0.98, p = 0.035), lo que indica una <strong>desviación de la normalidad</strong> en los residuos</p>
+<p>La prueba de Shapiro-Wilk no fue significativa (W = 0.98, p = 0.329), lo que indica que no hay <strong>desviación de la normalidad</strong> en los residuos</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Univariate Type III Repeated-Measures ANOVA Assuming Sphericity
-
-              Sum Sq num Df Error SS den Df  F value    Pr(&gt;F)    
-(Intercept) 16039253      1   250618     17 1087.979 &lt; 2.2e-16 ***
-Days          166235      9   151101    153   18.703 &lt; 2.2e-16 ***
+<pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)    
+SDL          2   9399    4699   192.3 &lt;2e-16 ***
+Residuals   57   1393      24                   
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-
-Mauchly Tests for Sphericity
-
-     Test statistic    p-value
-Days     0.00021902 5.1549e-08
-
-
-Greenhouse-Geisser and Huynh-Feldt Corrections
- for Departure from Sphericity
-
-      GG eps Pr(&gt;F[GG])    
-Days 0.36903  5.463e-09 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-        HF eps   Pr(&gt;F[HF])
-Days 0.4693648 7.076552e-11</code></pre>
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(model, <span class="at">partial =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(model, <span class="at">partial =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># Effect Size for ANOVA (Type III)
+<pre><code># Effect Size for ANOVA
 
-Parameter | Eta2 (partial) |       95% CI
------------------------------------------
-Days      |           0.52 | [0.42, 1.00]
+Parameter | Eta2 |       95% CI
+-------------------------------
+SDL       | 0.87 | [0.82, 1.00]
 
 - One-sided CIs: upper bound fixed at [1.00].</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(model, pairwise <span class="sc">~</span> Days, <span class="at">adjust =</span> <span class="st">"fdr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$emmeans
- Days emmean    SE df lower.CL upper.CL
- X0      257  7.57 17      241      273
- X1      264  7.88 17      248      281
- X2      265  6.95 17      251      280
- X3      283  9.16 17      264      302
- X4      289 10.00 17      267      310
- X5      309 12.20 17      283      334
- X6      312 14.90 17      281      344
- X7      319 11.80 17      294      344
- X8      337 14.20 17      307      367
- X9      351 15.80 17      318      384
-
-Confidence level used: 0.95 
-
-$contrasts
- contrast estimate    SE df t.ratio p.value
- X0 - X1    -7.844  5.61 17  -1.397  0.2058
- X0 - X2    -8.710  7.50 17  -1.162  0.2867
- X0 - X3   -26.340  8.77 17  -3.003  0.0120
- X0 - X4   -31.998  9.47 17  -3.378  0.0067
- X0 - X5   -51.867 11.70 17  -4.423  0.0010
- X0 - X6   -55.526 15.10 17  -3.669  0.0041
- X0 - X7   -62.099 10.40 17  -5.957  0.0002
- X0 - X8   -79.978 13.70 17  -5.834  0.0002
- X0 - X9   -94.199 13.50 17  -6.958  0.0001
- X1 - X2    -0.866  5.10 17  -0.170  0.8671
- X1 - X3   -18.496  6.24 17  -2.964  0.0126
- X1 - X4   -24.154  7.73 17  -3.125  0.0099
- X1 - X5   -44.023 10.50 17  -4.212  0.0016
- X1 - X6   -47.682 14.50 17  -3.291  0.0078
- X1 - X7   -54.255 10.60 17  -5.106  0.0004
- X1 - X8   -72.134 13.20 17  -5.452  0.0002
- X1 - X9   -86.355 13.20 17  -6.520  0.0001
- X2 - X3   -17.630  4.56 17  -3.867  0.0029
- X2 - X4   -23.288  7.22 17  -3.226  0.0086
- X2 - X5   -43.157 10.70 17  -4.047  0.0021
- X2 - X6   -46.816 13.30 17  -3.529  0.0053
- X2 - X7   -53.389  9.53 17  -5.601  0.0002
- X2 - X8   -71.268 13.00 17  -5.474  0.0002
- X2 - X9   -85.489 14.30 17  -5.975  0.0002
- X3 - X4    -5.657  4.07 17  -1.388  0.2058
- X3 - X5   -25.526  8.45 17  -3.021  0.0119
- X3 - X6   -29.186 11.00 17  -2.647  0.0231
- X3 - X7   -35.759  9.68 17  -3.695  0.0040
- X3 - X8   -53.637 11.40 17  -4.698  0.0007
- X3 - X9   -67.859 13.00 17  -5.211  0.0003
- X4 - X5   -19.869  6.36 17  -3.125  0.0099
- X4 - X6   -23.529  9.93 17  -2.371  0.0384
- X4 - X7   -30.101  8.69 17  -3.466  0.0058
- X4 - X8   -47.980  9.49 17  -5.057  0.0004
- X4 - X9   -62.202 11.10 17  -5.603  0.0002
- X5 - X6    -3.660 10.00 17  -0.365  0.7360
- X5 - X7   -10.232  9.46 17  -1.082  0.3153
- X5 - X8   -28.111  6.18 17  -4.546  0.0009
- X5 - X9   -42.333  8.68 17  -4.875  0.0005
- X6 - X7    -6.572 10.70 17  -0.616  0.5714
- X6 - X8   -24.451 10.70 17  -2.279  0.0448
- X6 - X9   -38.673 16.00 17  -2.423  0.0355
- X7 - X8   -17.879  9.25 17  -1.933  0.0852
- X7 - X9   -32.101 12.00 17  -2.683  0.0221
- X8 - X9   -14.222  7.46 17  -1.906  0.0874
-
-P value adjustment: fdr method for 45 tests </code></pre>
 </div>
-</div>
-<p>Se realizó un ANOVA de medidas repetidas para evaluar el efecto de la privación de sueño (Days) sobre el tiempo de reacción. El análisis reveló un efecto significativo del factor Days, F(9, 153) = 18.70, p &lt; .001, lo que indica que el rendimiento cognitivo varió significativamente a lo largo del tiempo. La prueba de esfericidad de Mauchly fue significativa (p &lt; .001), evidenciando una violación de este supuesto; en consecuencia, se aplicaron las correcciones de Greenhouse–Geisser y Huynh–Feldt, que confirmaron la significancia del efecto (p &lt; .001). El tamaño del efecto fue grande, η² parcial = 0.52, IC 95% [0.42, 1.00], lo que sugiere que más de la mitad de la varianza en el rendimiento se explica por el efecto de los días de privación.<br>
-</p>
-<p>Las comparaciones post hoc, corregidas por FDR, indicaron que los tiempos de reacción aumentan significativamente a partir del día 3 en adelante (p &lt; .05), con diferencias particularmente marcadas entre los días iniciales (X0–X2) y los días finales (X7–X9). Estos resultados respaldan la hipótesis de un deterioro progresivo del rendimiento cognitivo con el aumento de los días de privación de sueño.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>Days <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(sleepstudy<span class="sc">$</span>Days)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>reg_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> sleepstudy)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-lmerModLmerTest]
-Formula: Reaction ~ Days + (1 | Subject)
-   Data: sleepstudy
-
-REML criterion at convergence: 1786.5
-
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--3.2257 -0.5529  0.0109  0.5188  4.2506 
-
-Random effects:
- Groups   Name        Variance Std.Dev.
- Subject  (Intercept) 1378.2   37.12   
- Residual              960.5   30.99   
-Number of obs: 180, groups:  Subject, 18
-
-Fixed effects:
-            Estimate Std. Error       df t value Pr(&gt;|t|)    
-(Intercept) 251.4051     9.7467  22.8102   25.79   &lt;2e-16 ***
-Days         10.4673     0.8042 161.0000   13.02   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Correlation of Fixed Effects:
-     (Intr)
-Days -0.371</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardize_parameters</span>(reg_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># Standardization method: refit
-
-Parameter   | Std. Coef. |        95% CI
-----------------------------------------
-(Intercept) |  -6.92e-16 | [-0.32, 0.32]
-Days        |       0.54 | [ 0.45, 0.62]</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(reg_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># R2 for Mixed Models
-
-  Conditional R2: 0.704
-     Marginal R2: 0.280</code></pre>
-</div>
-</div>
-<p>Se ajustó un modelo lineal mixto para predecir el tiempo de reacción a partir del número de días de privación de sueño, incluyendo un intercepto aleatorio por sujeto. Los resultados mostraron que el tiempo de reacción aumentó significativamente con el paso de los días, β = 10.47, SE = 0.80, t(161) = 13.02, p &lt; .001, lo que indica un deterioro progresivo del rendimiento cognitivo asociado a la restricción del sueño. El coeficiente estandarizado fue β = 0.54, IC 95% [0.45, 0.62], lo que representa un efecto moderado-alto. El modelo explicó el 28% de la varianza mediante efectos fijos (R² marginal = 0.28) y el 70% al considerar también los efectos aleatorios (R² condicional = 0.70).</p>
+<p>Se realizó un ANOVA de un factor para evaluar el efecto del nivel de privación de sueño (sin, leve y moderada) sobre el rendimiento cognitivo. El análisis mostró un efecto significativo del factor privación de sueño, F(2, 57) = 192.3, p &lt; .001, indicando diferencias sustanciales en el rendimiento entre los grupos. El tamaño del efecto fue muy grande, η² = 0.87, IC 95% [0.82, 1.00], lo que sugiere que una proporción considerable de la varianza en el rendimiento cognitivo se explica por el nivel de privación de sueño.</p>
 </section>
 
 </main>
