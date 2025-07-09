@@ -35,9 +35,9 @@ El conjunto de datos utilizado contiene información sobre el desempeño en memo
 df = read.csv("/Users/JP/Desktop/Trabajo-ANOVA/sleep_memory_data.csv")
 
 
-# No_Sleep_Deprivation: Personas que duermen 7 horas o más
-# Moderate_Sleep_Deprivation: Personas que duermen entre 4-6 horas 
-# Severe_Sleep_Deprivation: Personas que duermen entre 1-3 horas 
+# Grupo 0 -> No_Sleep_Deprivation: Personas que duermen 7 horas o más
+# Grupo 1 -> Moderate_Sleep_Deprivation: Personas que duermen entre 4-6 horas 
+# Grupo 2 -> Severe_Sleep_Deprivation: Personas que duermen entre 1-3 horas 
 ```
 
 ## Exploratory Data analysis
@@ -114,4 +114,4 @@ summary(model)
 eta_squared(model, partial = TRUE)
 ```
 
-Se realizó un ANOVA de un factor para evaluar el efecto del nivel de privación de sueño (sin, leve y moderada) sobre el rendimiento cognitivo. El análisis mostró un efecto significativo del factor privación de sueño, F(2, 57) = 192.3, p \< .001, indicando diferencias sustanciales en el rendimiento entre los grupos. El tamaño del efecto fue muy grande, η² = 0.87, IC 95% \[0.82, 1.00\], lo que sugiere que una proporción considerable de la varianza en el rendimiento cognitivo se explica por el nivel de privación de sueño.
+Se realizó un ANOVA de un factor para evaluar el efecto del nivel de privación de sueño (sin, leve y moderada) sobre el rendimiento cognitivo. El análisis mostró un efecto significativo del factor privación de sueño, F(2, 57) = 192.3, p \< .001, indicando diferencias sustanciales en el rendimiento entre los grupos. El tamaño del efecto fue grande, η² = 0.87, IC 95% \[0.82, 1.00\], lo que sugiere que una proporción considerable de la varianza en el rendimiento cognitivo se explica por el nivel de privación de sueño.
