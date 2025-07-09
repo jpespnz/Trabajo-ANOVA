@@ -1,3 +1,4 @@
+#librerias
 if (!require("readxl")) install.packages("readxl"); library("readxl")
 if (!require("writexl")) install.packages("writexl"); library("writexl")
 if (!require("tidyverse")) install.packages("tidyverse"); library("tidyverse")
@@ -13,72 +14,72 @@ if (!require('knitr')) install.packages('knitr'); library('knitr')
 if (!require('ggforce')) install.packages('ggforce'); library('ggforce')
 if (!require('Hmisc')) install.packages('Hmisc'); library('Hmisc')
 if (!require('gtsummary')) install.packages('gtsummary'); library('gtsummary')
-library(effectsize)
-library(performance)
+library(emmeans)
 
-# Carga del dataset
-data("sleepstudy")  
-sleepstudy
-df <- sleepstudy
+# Introducción
+# El conjunto de datos utilizado contiene información sobre el desempeño en memoria de trabajo de participantes categorizados según su nivel de privación de sueño: sin privación, privación moderada y privación severa. Esta clasificación permite evaluar diferencias interindividuales en función del grado de restricción del sueño. La variable dependiente corresponde a un puntaje de memoria de trabajo obtenido tras un periodo de exposición controlada.
 
-# Exploración de los datos
+df = read.csv("/Users/JP/Desktop/Trabajo-ANOVA/sleep_memory_data.csv")
+# Grupo 0 -> No_Sleep_Deprivation: Personas que duermen 7 horas o más
+# Grupo 1 -> Moderate_Sleep_Deprivation: Personas que duermen entre 4-6 horas 
+# Grupo 2 -> Severe_Sleep_Deprivation: Personas que duermen entre 1-3 horas 
+
+# Exploratory Data analysis
+
 glimpse(df)
 summary(df)
-describeBy(sleepstudy, group = sleepstudy$Days)
-print("La variable Reaction presentó una media de 350.85 ms (DE = 66.99), con valores que oscilaron entre 237.25 y 466.35 ms. La variable Days fue constante en 9 días (DE = 0.00), mientras que Subject se distribuyó equitativamente entre 18 participantes (M = 9.50; DE = 5.34).")
 
-# Transformación y preprocesamiento de los datos
-df$Days <- as.factor(df$Days)
+df$SDL <- as.character(df$SDL)
+df$SDL <- factor(x = df$SDL, levels = c("0","1","2"))
 
-## Grafico 1 para observar diferencias entre promedios
-ggplot(df, aes(x = Days, y = Reaction)) +
+df |> 
+  select(-ID) |> 
+  describeBy(df$SDL)
+
+
+
+# Gráfico 1
+
+ggplot(df, aes(x = SDL, y = WMS)) +
   stat_summary(fun = mean, geom = "line", color = "steelblue", size = 1.2) +
   stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.3) +
-  labs(title = "Promedio de tiempo de reacción por día",
-       x = "Días de privación de sueño", y = "Tiempo de reacción (ms)") +
+  labs(title = "Sueño y memoria de trabajo",
+       x = "Horas de privación de sueño", y = "Rendimiento memoria de trabajo") +
   theme_minimal()
 
-## Grafico 2, para observar distribuciones
-ggplot(df, aes(x = factor(Days), y = Reaction)) +
+# Gráfico 2
+
+ggplot(df, aes(x = factor(SDL), y = WMS)) +
   geom_boxplot(fill = "lightblue") +
-  labs(title = "Distribución del tiempo de reacción por día",
-       x = "Día", y = "Tiempo de reacción (ms)") +
+  labs(title = "Sueño y memoria de trabajo",
+       x = "SDL", y = "WMS") +
   theme_minimal()
 
-## Grafico 3, trayectorias individuales de cada sujeto
-ggplot(sleepstudy, aes(x = Days, y = Reaction, group = Subject)) +
-  geom_line(alpha = 0.3) +
-  labs(title = "Tiempo de reacción por sujeto",
-       x = "Días", y = "Tiempo de reacción") +
-  theme_minimal()
 
-# Comprobación de supuestos
-model <- aov_ez(id = "Subject",
-                dv = "Reaction",
-                within = "Days",
-                data = sleepstudy)
+# Objetivo
+# Evaluar el efecto de la privación progresiva del sueño sobre la memoria de trabajo, medida a través de un puntaje específico
+
+# Hipotesis
+# Los participantes con privación del sueño, ya sea leve o moderada, presentarán un menor rendimiento cognitivo en comparación con aquellos sin privación del sueño.
+
+# Supuestos y modelo
+model <- stats::aov(WMS ~ SDL, data = df)
 qqnorm(residuals(model))
-qqline(residuals(model), col = "red")
+stats::qqline(residuals(model), col = "red")
 check_model(model)
 shapiro_test <- shapiro.test(residuals(model))
 print(shapiro_test)
-print("La prueba de Shapiro-Wilk fue significativa (W = 0.98, p = 0.035), lo que indica una desviación de la normalidad en los residuos")
 
-# ANOVA
-model <- aov_ez(id = "Subject",
-                dv = "Reaction",
-                within = "Days",
-                data = sleepstudy)
+# La prueba de Shapiro-Wilk no fue significativa (W = 0.98, p = 0.329), lo que indica que no hay desviación de la normalidad en los residuos
+
+# Tamaño del efecto
 summary(model)
 eta_squared(model, partial = TRUE)
-emmeans(model, pairwise ~ Days, adjust = "fdr")
-print("Se realizó un ANOVA de medidas repetidas para evaluar el efecto de la privación de sueño (Days) sobre el tiempo de reacción. El análisis reveló un efecto significativo del factor Days, F(9, 153) = 18.70, p < .001, lo que indica que el rendimiento cognitivo varió significativamente a lo largo del tiempo. La prueba de esfericidad de Mauchly fue significativa (p < .001), evidenciando una violación de este supuesto; en consecuencia, se aplicaron las correcciones de Greenhouse–Geisser y Huynh–Feldt, que confirmaron la significancia del efecto (p < .001). El tamaño del efecto fue grande, η² parcial = 0.52, IC 95% [0.42, 1.00], lo que sugiere que más de la mitad de la varianza en el rendimiento se explica por el efecto de los días de privación. Las comparaciones post hoc, corregidas por FDR, indicaron que los tiempos de reacción aumentan significativamente a partir del día 3 en adelante (p < .05), con diferencias particularmente marcadas entre los días iniciales (X0–X2) y los días finales (X7–X9). Estos resultados respaldan la hipótesis de un deterioro progresivo del rendimiento cognitivo con el aumento de los días de privación de sueño.")
 
-# LMM
-sleepstudy$Days <- as.numeric(sleepstudy$Days)
-reg_model <- lmer(Reaction ~ Days + (1 | Subject), data = sleepstudy)
-summary(reg_model)
-standardize_parameters(reg_model)
-r2(reg_model)
-
-print("Se ajustó un modelo lineal mixto para predecir el tiempo de reacción a partir del número de días de privación de sueño, incluyendo un intercepto aleatorio por sujeto. Los resultados mostraron que el tiempo de reacción aumentó significativamente con el paso de los días, β = 10.47, SE = 0.80, t(161) = 13.02, p < .001, lo que indica un deterioro progresivo del rendimiento cognitivo asociado a la restricción del sueño. El coeficiente estandarizado fue β = 0.54, IC 95% [0.45, 0.62], lo que representa un efecto moderado-alto. El modelo explicó el 28% de la varianza mediante efectos fijos (R² marginal = 0.28) y el 70% al considerar también los efectos aleatorios (R² condicional = 0.70).")
+# Se realizó un ANOVA de un factor para evaluar el efecto 
+# del nivel de privación de sueño (sin, leve y moderada) sobre el rendimiento cognitivo. 
+# El análisis mostró un efecto significativo del factor privación de sueño, 
+# F(2, 57) = 192.3, p < .001, indicando diferencias sustanciales en el rendimiento entre los grupos. 
+# El tamaño del efecto fue grande, η² = 0.87, IC 95% [0.82, 1.00], lo que sugiere 
+# que una proporción considerable de la varianza en el rendimiento cognitivo se explica 
+# por el nivel de privación de sueño.
